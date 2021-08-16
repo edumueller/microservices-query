@@ -19,9 +19,13 @@ app.post("/events", ({ body: { type, data } }, res) => {
   }
   if (type === "CommentCreated") {
     const { id, content, postId } = data;
-    posts[postId].comments = [...posts[postId].comments, { id, content }];
+    posts[postId].comments = [
+      ...posts[postId].comments,
+      { id, content, postId },
+    ];
   }
 
+  console.log(posts);
   res.send({});
 });
 
