@@ -6,9 +6,24 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/posts", (req, res) => {});
+const posts = {};
 
-app.post("/events", (req, res) => {});
+app.get("/posts", (req, res) => {
+  res.send(posts);
+});
+
+app.post("/events", ({ body: { type, data } }, res) => {
+  if (type === "PostCreated") {
+    const { id, title } = data;
+    posts[id] = { id, title, comments: [] };
+  }
+  if (type === "CommentCreated") {
+    const { id, content, postId } = data;
+    posts[postId].comments = [...posts[postId].comments, { id, content }];
+  }
+
+  res.send({});
+});
 
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
