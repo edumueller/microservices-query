@@ -10,23 +10,21 @@ app.use(cors());
 const posts = {};
 
 const handleEvent = (type, data) => {
-  switch (type) {
-    case "PostCreated":
-      const { id, title } = data;
-      posts[id] = { id, title, comments: [] };
-      break;
-    case "CommentCreated":
-      const { id, content, postId, status } = data;
-      const post = posts[postId];
-      post.comments.push({ id, content, status });
-      break;
-    case "CommentUpdated":
-      const { id, content, postId, status } = data;
-      const post = posts[postId];
-      const comment = post.comments.find((comment) => comment.id === id);
-      comment.status = status;
-      comment.content = content;
-      break;
+  if (type === "PostCreated") {
+    const { id, title } = data;
+    posts[id] = { id, title, comments: [] };
+  }
+  if (type === "CommentCreated") {
+    const { id, content, postId, status } = data;
+    const post = posts[postId];
+    post.comments.push({ id, content, status });
+  }
+  if (type === "CommentUpdated") {
+    const { id, content, postId, status } = data;
+    const post = posts[postId];
+    const comment = post.comments.find((comment) => comment.id === id);
+    comment.status = status;
+    comment.content = content;
   }
 };
 
